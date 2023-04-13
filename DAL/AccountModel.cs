@@ -18,8 +18,6 @@ namespace DAL
             }
         public bool Login(string userName,string password)
         {
-            try
-            {
                 object[] parameters =
                     {
                     new SqlParameter("@UserName",userName),
@@ -27,11 +25,6 @@ namespace DAL
             };
                 var resurt = Context.Database.SqlQuery<bool>("Exec User_Login @UserName,@Password", parameters).FirstOrDefault();
                 return resurt;
-            }
-            catch
-            {
-                return false;
-            }
         }      
     }
 }
