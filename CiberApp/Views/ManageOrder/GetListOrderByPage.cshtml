@@ -1,0 +1,245 @@
+﻿@using DAL.Model;
+@model ListOrderModel
+@{
+    ViewData["Title"] = "ManageOrder";
+}
+<section>
+	<h1>Manage Orders</h1>
+	<form>
+		<label for="txtSearch" style="font-weight: bold;">Enter category to search:</label>
+		<input type="text" id="txtSearch" name="txtSearch" value="@Model.textSearch"> 
+		<button type="button" id="btnSearch" onclick="onClickSearch(1)">Search</button>
+	</form>
+	<table>
+		<thead>
+			<tr>
+				<th>Stt</th>
+				<th>Product Name</th>
+				<th>Customer Name</th>
+				<th>Category Name</th>
+				<th>Order Date</th>
+				<th>Amount</th>
+			</tr>
+		</thead>
+		<tbody>
+			 @if (Model.ListOrders != null && Model.ListOrders.Count > 0)
+                                        {
+                                    @foreach (var item in Model.ListOrders)
+											{
+												<tr>
+													<td>@item.Stt</td>
+													<td>@item.ProductName</td>
+													<td>@item.CustomerName</td>
+													<td>@item.CategoryName</td>
+											<td>@item.OrderDate.Value.ToString("dd/MM/yyyy")</td>
+													<td>@item.Amount</td>
+												</tr>
+                                            }
+                                        }
+		</tbody>
+	</table>
+	<div id="pagination">
+		<div class="d-flex align-content-center justify-content-center">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination border-0">
+
+
+					@if (Model.ListOrders != null && Model.CountAll > 10)
+					{
+						<li class="page-item">
+							<a class="page-link" onclick="@(Model.page_active > 1 ? "onClickPage(1)" : "")">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+								</svg>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+								</svg>
+								First
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" onclick="@(Model.page_active > 1 ? "onClickPage("+ (Model.page_active-1)+")" : "")">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+								</svg>
+							</a>
+						</li>
+						for (int i = 1; i <= (int)Math.Ceiling(Model.CountAll / 10); i++)
+						{
+							<li class="page-item">
+								<a class="page-link @(Model.page_active == @i ? "active_page" : "")" onclick="onClickPage(@i)" style="cursor: pointer;">@i</a>
+							</li>
+						}
+						<li class="page-item">
+							<a class="page-link" onclick="@(Model.page_active < (int)Math.Ceiling(Model.CountAll / 10) ? "onClickPage("+ (Model.page_active+1)+")" : "")">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+								</svg>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" onclick="@(Model.page_active < (int)Math.Ceiling(Model.CountAll / 10) ? "onClickPage("+ (int)Math.Ceiling(Model.CountAll / 10) +")" : "")">
+								Last
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+								</svg>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+									<path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+								</svg>
+							</a>
+						</li>
+					}
+
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<button id="btnAdd" data-bs-toggle="modal" data-bs-target="#exampleModal">Create new order</button>
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog w-modal-appply">
+			<div class="modal-content">
+				<div class="modal-header">
+					<div>
+						<h5 class="modal-title">
+							Create new order 
+						</h5>						
+					</div>
+				</div>
+				<div class="modal-body bg-color-modal">
+					<div class="container-custom-70 m-auto">
+						<div class="row align-items-center justify-content-start mb-3">
+							<div class="col-md-3">
+								<label for="gender" class="col-form-label float-end font-16-semi-bold">Order Name</label>
+							</div>
+							<div class="col-md-9">
+								<input type="text" id="orderName" name="OrderName" class="form-control">
+							</div>
+						</div>
+						<div class="row align-items-center justify-content-start mb-3">
+							<div class="col-md-3">
+								<label for="gender" class="col-form-label float-end font-16-semi-bold">Product</label>
+							</div>
+							<div class="col-md-9">
+								<select class="max_with" id="ProductId" name="ProductId">
+									@if (Model.ListProducts != null && Model.ListProducts.Count > 0)
+									{
+										<option></option>
+											foreach (var item in Model.ListProducts)
+											{
+												<option value="@item.ProductId">@item.ProductName</option>
+											}
+									}
+								</select>
+							</div>
+						</div>
+						<div class="row align-items-center justify-content-start mb-3">
+							<div class="col-md-3">
+								<label for="gender" class="col-form-label float-end font-16-semi-bold">Customer</label>
+							</div>
+							<div class="col-md-9">
+								<select class="max_with" id="CustomerId" name="CustomerId">
+									@if (Model.ListCustomers != null && Model.ListCustomers.Count > 0)
+									{
+										<option></option>
+										foreach (var item in Model.ListCustomers)
+										{
+											<option atr-amount ="" value="@item.CustomerId">@item.CustomerName</option>
+										}
+									}
+								</select>
+							</div>
+						</div>
+						<div class="row align-items-center justify-content-start mb-3">
+							<div class="col-md-3">
+								<label for="gender" class="col-form-label float-end font-16-semi-bold">Order Date</label>
+							</div>
+							<div class="col-md-9">
+								<input class="max_with" type="datetime-local" id="orderDate" name="orderDate">
+							</div>
+						</div>
+						<div class="row align-items-center justify-content-start mb-3">
+							<div class="col-md-3">
+								<label for="gender" class="col-form-label float-end font-16-semi-bold">Amount</label>
+							</div>
+							<div class="col-md-9">
+								<input class="max_with" type="number" id="Amount" name="Amount">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button"  style="background: #F2F2F2;" data-bs-dismiss="modal">&nbsp; &nbsp; Cancel &nbsp; &nbsp;</button>
+					<button type="button"  onclick="CreateNewOrder(this)">&nbsp; &nbsp; Create Order &nbsp; &nbsp;</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+@section Scripts{
+	<script type="text/javascript">
+		function onClickSearch(page_num) {
+			var textSearch = document.getElementById("txtSearch").value;
+			var url = '@Url.Action("GetListOrderByPage", "ManageOrder")';
+			url += '?page_num=' + page_num + '&textSearch=' + textSearch;
+			window.location.href = url;
+		}
+		function onClickPage(page_num) {
+			var textSearch = document.getElementById("txtSearch").value;
+			var url = '@Url.Action("GetListOrderByPage", "ManageOrder")';
+			url += '?page_num=' + page_num + '&textSearch=' + textSearch;
+			window.location.href = url;
+		}
+		var CreateNewOrder = function (btn) {
+			var form = $(btn).closest('form');
+
+			var orderName = $('#orderName').val();
+			var productId = $('#ProductId').val();
+			var customerId = $('#CustomerId').val();
+			var orderDate = $('#orderDate').val();
+			var amount = $('#Amount').val();
+
+
+			if (productId == null || productId == "") {
+				alert("Vui lòng chọn sản phẩm");
+				return;
+			}
+			if (customerId == null || customerId == "") {
+				alert("Vui lòng chọn khách hàng");
+				return;
+			}
+			if (orderName == null || orderName == "") {
+				alert("Vui lòng nhập tên đơn hàng");
+				return;
+			}
+			if (amount == null || amount == "") {
+				alert("Vui lòng nhập số tiền");
+				return;
+			}
+			if (orderDate == null || orderDate == "") {
+				alert("Vui lòng nhập ngày");
+				return;
+			}
+			$.ajax({
+				url: '/ManageOrder/CreateNewOrder',
+				data: {
+					orderName: orderName,
+					productId: productId,
+					customerId: customerId,
+					orderDate: orderDate,
+					amount: amount
+				},
+				method: 'POST',
+				success: function (res) {
+					if (res.isSuccess == 1) {
+						alert(res.message);
+						location.reload();
+					} else {
+						alert(res.message);
+						location.reload();
+					}
+						
+				}
+			});
+		}
+	</script>
+	}

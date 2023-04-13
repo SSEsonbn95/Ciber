@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+   <button type="submit" id="btnSearch" onclick="onClick()">Manage Orders</button>
+
+</div>
+<script type="text/javascript">
+    function onClick() {
+        var url = '@Url.Action("GetListOrderByPage", "ManageOrder")';
+        window.location.href = url;
+    }
+</script>
